@@ -32,7 +32,25 @@ class ProjectListView(APIView):
 
 
 class ProjectDetailView(APIView):
-    def patch(self, request, pk): #프로젝트 수정
-        pass
-    def delete(self, request, pk): #프로젝트 삭제
-        pass
+    def put(self, request, project_id): #프로젝트 수정
+        try:
+            project = Project.objects.get(id=project_id)
+        except:
+            return Response({"detail": "프로젝트를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+        if not request.user.is_authenticated:
+            return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
+        if not request.data['url'] or request.data['url'] == "":
+            return Response({"detail": "url을 입력해주세요."}, status=status.HTTP_400_BAD_REQUEST)
+        project.url = request.data.get('url')
+        project.save()
+        return Response({"detail": "프로젝트명이 성공적으로 수정되었습니다"}, status=status.HTTP_200_OK)
+    
+    def delete(self, request, project_id): #프로젝트 삭제
+        try:
+            project = Project.objects.get(id=project_id)
+        except:
+            return Response({"detail": "프로젝트를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+        if not request.user.is_authenticated:
+            return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
+        project.delete()
+        return Response({"detail": "프로젝트가 성공적으로 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
