@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'project',
     'request',
     'tokens',
-    'TokenTime'
+    'tokentime'
 
 ]
 
