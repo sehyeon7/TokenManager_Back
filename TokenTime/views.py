@@ -39,5 +39,23 @@ class TokenTimeListView(APIView):
     return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 class TokenTimeDetailView(APIView):
-  def delete(self):
-    pass
+  def delete(self, request, token_time_id): #토큰시간 삭제
+    try:
+      token_time = TokenTime.objects.get(id=token_time_id)
+    except:
+      return Response({"detail": "등록되지 않은 정보입니다."}, status=status.HTTP_404_NOT_FOUND)
+    if not request.user.is_authenticated:
+      return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
+    token_time.delete()
+    return Response({"detail": "토큰시간이 성공적으로 삭제되었습니다."}, status=status.HTTP_204_NO_CONTENT)
+  
+  def put(self, request, token_time_id): #토큰시간 수정
+    try:
+      token_time = TokenTime.objects.get(id=token_time_id)
+    except:
+      return Response({"detail": "등록되지 않은 정보입니다."}, status=status.HTTP_404_NOT_FOUND)
+    if not request.user.is_authenticated:
+      return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
+    token_time.timelimit = request.data.get('timelimit')
+    token_time.save()
+    return Response({"detail": "토큰시간이 성공적으로 수정되었습니다."}, status=status.HTTP_200_OK)
