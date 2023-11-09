@@ -21,5 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/account/', include('account.urls')),
     path('api/project/', include('project.urls')),
-    path('api/tokentime/', include('tokentime.urls')),
+    path('api/tokentime/', include('TokenTime.urls')),
 ]
