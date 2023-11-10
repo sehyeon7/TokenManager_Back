@@ -18,6 +18,9 @@ class RequestListView(APIView):
         type = request.data.get('type')
         spec_url = request.data.get('spec_url')
 
+        if not request.user.is_authenticated:
+            return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
+
         if not type or not spec_url:
             return Response({"detail": "fields missing."}, status=status.HTTP_400_BAD_REQUEST)
         request = Request.objects.create(type=type, spec_url=spec_url)
@@ -27,6 +30,8 @@ class RequestListView(APIView):
 
 class RequestDetailView(APIView):
     def delete(self, request, request_id):
+        if not request.user.is_authenticated:
+            return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
         try:
             request = Request.objects.get(id=request_id)
         except:
