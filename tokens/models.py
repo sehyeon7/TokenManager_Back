@@ -8,3 +8,4 @@ class Tokens(models.Model):
     content=models.CharField(max_length=64)
     tokenTime=models.ForeignKey(TokenTime, null=True, on_delete=models.CASCADE)
     request=models.ForeignKey(Request, null=True, on_delete=models.CASCADE)
+    is_expired=models.BooleanField(default=False)
