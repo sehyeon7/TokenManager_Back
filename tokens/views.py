@@ -20,7 +20,7 @@ class TokensListView(APIView):
         content=request.data.get('content')
         request_id=request.data.get('request')
         tokenTime=request.data.get('tokenTime')
-
+        
         if not token_name or not content or not request_id or not tokenTime:
             return Response({"detail": "missing fields"}, status=status.HTTP_400_BAD_REQUEST)
         
