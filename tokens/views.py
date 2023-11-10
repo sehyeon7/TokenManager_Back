@@ -20,6 +20,9 @@ class TokensListView(APIView):
         content=request.data.get('content')
         request_id=request.data.get('request')
         tokenTime=request.data.get('tokenTime')
+        
+        if not request.user.is_authenticated:
+            return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
 
         if not token_name or not content or not request_id or not tokenTime:
             return Response({"detail": "missing fields"}, status=status.HTTP_400_BAD_REQUEST)
@@ -33,6 +36,9 @@ class TokensListView(APIView):
     
 class TokensDetailView(APIView):
     def delete(self, request, token_id):
+        if not request.user.is_authenticated:
+            return Response({"detail": "로그인 후 다시 시도해주세요."}, status=status.HTTP_401_UNAUTHORIZED)
+        
         try:
             token=Tokens.objects.get(id=token_id)
         except:
