@@ -15,8 +15,8 @@ class RequestListView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
-        type = request.type
-        spec_url = request.spec_url
+        type = request.data.get('type')
+        spec_url = request.data.get('spec_url')
 
         if not type or not spec_url:
             return Response({"detail": "fields missing."}, status=status.HTTP_400_BAD_REQUEST)
