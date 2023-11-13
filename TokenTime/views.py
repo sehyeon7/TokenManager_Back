@@ -9,7 +9,7 @@ from .serializers import TokenTimeSerializer
 # Create your views here.
 class TokenTimeListView(APIView):
   def get(self, request): #프로젝트에 등록되어 있는 모든 토큰시간 가져오기
-    project_id = request.GET.get('project') #request.GET.get('project')의 의미 : project라는 이름의 파라미터를 가져온다.
+    project_id = request.data.get('project') #request.GET.get('project')의 의미 : project라는 이름의 파라미터를 가져온다.
     if not project_id:
       return Response({"detail": "프로젝트 id가 누락되었습니다."}, status=status.HTTP_400_BAD_REQUEST)
     if not Project.objects.filter(id=project_id).exists():
