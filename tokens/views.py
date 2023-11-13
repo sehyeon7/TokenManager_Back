@@ -6,7 +6,7 @@ from rest_framework import status
 # Create your views here.
 from .serializers import TokensSerializer
 from .models import Tokens
-from Request.models import Request
+from request.models import Request
 
 class TokensListView(APIView):
     def get(self, request):
