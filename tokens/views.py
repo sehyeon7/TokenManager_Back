@@ -6,7 +6,8 @@ from rest_framework import status
 # Create your views here.
 from .serializers import TokensSerializer
 from .models import Tokens
-from Request.models import Request
+from request.models import Request
+from TokenTime.models import TokenTime
 
 class TokensListView(APIView):
     def get(self, request):
@@ -19,16 +20,22 @@ class TokensListView(APIView):
         token_name=request.data.get('token_name')
         content=request.data.get('content')
         request_id=request.data.get('request')
-        tokenTime=request.data.get('tokenTime')
         
-        if not token_name or not content or not request_id or not tokenTime:
+        if not token_name or not content or not request_id:
             return Response({"detail": "missing fields"}, status=status.HTTP_400_BAD_REQUEST)
         
         if not Request.objects.filter(id=request_id).exists():
             return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         
+        if not TokenTime.objects.filter(tokenname=token_name).exists():
+            return Response({"detail": "Create the token time for the token first."}, status=status.HTTP_404_NOT_FOUND)
+        
+        for tokentime in TokenTime.objects.all():
+            if (tokentime.tokenname==token_name):
+                tokenTime=tokentime
+        
         token = Tokens.objects.create(token_name=token_name, content=content, request_id=request_id, tokenTime=tokenTime)
-        serializer=TokensSerializer(token, many=True)
+        serializer=TokensSerializer(token)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 class TokensDetailView(APIView):

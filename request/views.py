@@ -5,22 +5,34 @@ from rest_framework import status
 
 from .serializers import RequestSerializer
 from .models import Request
+from project.models import Project
 
 # Create your views here.
 class RequestListView(APIView):
     def get(self, request):
-        requests = Request.objects.all()
-        serializer = RequestSerializer(requests, many=True)
+        project_id=request.data.get('project')
 
+        if not project_id:
+            return Response({"detail": "missing fields ['project']"}, status=status.HTTP_400_BAD_REQUEST)
+        if not Project.objects.filter(id=project_id).exists():
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        requests=Request.objects.filter(project_id=project_id)
+        serializer = RequestSerializer(requests, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     def post(self, request):
         type = request.data.get('type')
         spec_url = request.data.get('spec_url')
+        project_id=request.data.get('project')
 
-        if not type or not spec_url:
+        if not type or not spec_url or not project_id:
             return Response({"detail": "fields missing."}, status=status.HTTP_400_BAD_REQUEST)
-        request = Request.objects.create(type=type, spec_url=spec_url)
+        
+        if not Project.objects.filter(id=project_id).exists():
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        request = Request.objects.create(type=type, spec_url=spec_url, project_id=project_id)
+
 
         serializer = RequestSerializer(request)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
