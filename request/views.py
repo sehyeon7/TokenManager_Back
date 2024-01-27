@@ -10,7 +10,8 @@ from project.models import Project
 # Create your views here.
 class RequestListView(APIView):
     def get(self, request):
-        project_id=request.data.get('project')
+        project_id = request.GET.get('project')
+        
 
         if not project_id:
             return Response({"detail": "missing fields ['project']"}, status=status.HTTP_400_BAD_REQUEST)
