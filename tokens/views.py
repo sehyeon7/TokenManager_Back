@@ -11,8 +11,11 @@ from TokenTime.models import TokenTime
 
 class TokensListView(APIView):
     def get(self, request):
-        tokens=Tokens.objects.all()
-        serializer=TokensSerializer(tokens, many=True)
+        request_id = request.GET.get('request')
+        if not Request.Objects.filter(id=request_id).exists():
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+        token_list = Tokens.objects.filter(request=request_id)
+        serializer=TokensSerializer(token_list, many=True)
 
         return Response(serializer.data, status=status.HTTP_200_OK)
     
