@@ -32,6 +32,14 @@ class ProjectListView(APIView):
 
 
 class ProjectDetailView(APIView):
+    def get(self, project_id):
+        try:
+            project = Project.objects.get(id=project_id)
+        except:
+            return Response({"detail": "프로젝트를 찾을 수 없습니다."}, status=status.HTTP_404_NOT_FOUND)
+        serializer = ProjectSerializer(project)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
     def put(self, request, project_id): #프로젝트 수정
         try:
             project = Project.objects.get(id=project_id)
