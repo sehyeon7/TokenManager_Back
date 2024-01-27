@@ -32,7 +32,8 @@ class ProjectListView(APIView):
 
 
 class ProjectDetailView(APIView):
-    def get(self, project_id):
+    def get(self, request, project_id):
+        print("AAAAA", project_id)
         try:
             project = Project.objects.get(id=project_id)
         except:
