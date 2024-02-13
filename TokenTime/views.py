@@ -26,6 +26,13 @@ class TokenTimeListView(APIView):
     project_id = request.data.get('project')
     token_name = request.data.get('tokenname')
     time_limit = request.data.get('timelimit')
+    time_limit_split = time_limit.split(':')
+
+    # time_limit이 hh/mm/ss 형식인지 확인
+    if len(time_limit_split) != 3 or len(time_limit_split[1]) != 2 or len(time_limit_split[2]) != 2:
+      return Response({"detail": "시간 형식이 올바르지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
+    if not time_limit_split[0].isdigit() or not time_limit_split[1].isdigit() or not time_limit_split[2].isdigit():
+      return Response({"detail": "시간 형식이 올바르지 않습니다."}, status=status.HTTP_400_BAD_REQUEST)
 
     if not project_id or not token_name or not time_limit:
       return Response({"detail": "누락된 필드값, ['project', 'tokenname', 'timelimit']"}, status=status.HTTP_400_BAD_REQUEST)

@@ -5,4 +5,4 @@ from project.models import Project
 class TokenTime(models.Model):
   project = models.ForeignKey(Project, on_delete=models.CASCADE)
   tokenname = models.CharField(max_length=64)
-  timelimit = models.IntegerField()
+  timelimit = models.CharField(max_length=256)
