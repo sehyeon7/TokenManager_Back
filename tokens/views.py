@@ -23,8 +23,9 @@ class TokensListView(APIView):
         token_name=request.data.get('token_name')
         content=request.data.get('content')
         request_id=request.data.get('request')
+        expires_at=request.data.get('expiredAt')
         
-        if not token_name or not content or not request_id:
+        if not token_name or not content or not request_id or expires_at:
             return Response({"detail": "missing fields"}, status=status.HTTP_400_BAD_REQUEST)
         
         if not Request.objects.filter(id=request_id).exists():
@@ -37,7 +38,7 @@ class TokensListView(APIView):
             if (tokentime.tokenname==token_name):
                 tokenTime=tokentime
         
-        token = Tokens.objects.create(token_name=token_name, content=content, request_id=request_id, tokenTime=tokenTime)
+        token = Tokens.objects.create(token_name=token_name, content=content, request_id=request_id, tokenTime=tokenTime, expires_at=expires_at)
         serializer=TokensSerializer(token)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
