@@ -25,7 +25,7 @@ class TokensListView(APIView):
         request_id=request.data.get('request')
         expires_at=request.data.get('expiredAt')
         
-        if not token_name or not content or not request_id or expires_at:
+        if not token_name or not content or not request_id or not expires_at:
             return Response({"detail": "missing fields"}, status=status.HTTP_400_BAD_REQUEST)
         
         if not Request.objects.filter(id=request_id).exists():
