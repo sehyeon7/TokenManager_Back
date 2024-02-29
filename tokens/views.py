@@ -24,7 +24,7 @@ class TokensListView(APIView):
         content=request.data.get('content')
         request_id=request.data.get('request')
         expires_at=request.data.get('expiredAt')
-        
+
         if not token_name or not content or not request_id or expires_at:
             return Response({"detail": "missing fields"}, status=status.HTTP_400_BAD_REQUEST)
         
@@ -51,7 +51,16 @@ class TokensDetailView(APIView):
         
         token.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-    
 
+class TokenExpiredView(APIView):
+    def post(self, request):
+        expired_tokens=request.data.get('expired_tokens')
+        expired_token_id = [int(num) for num in expired_tokens.split('*') if num]
+
+        Tokens.objects.filter(id__in=expired_token_id).update(is_expired=1)
+
+        expiredtokens_list = Tokens.objects.filter(is_expired=1)
+        serializer = TokensSerializer(expiredtokens_list, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
