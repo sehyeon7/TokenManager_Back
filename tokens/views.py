@@ -58,7 +58,8 @@ class TokenExpiredView(APIView):
         expired_tokens=request.data.get('expired_tokens')
         expired_token_id = [int(num) for num in expired_tokens.split('*') if num]
 
-        full_token_list=Tokens.objects.filter(id__in=expired_token_id).update(is_expired=1)
+        Tokens.objects.filter(id__in=expired_token_id).update(is_expired=1)
+        full_token_list = Tokens.objects.all()
 
         serializer = TokensSerializer(full_token_list, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
