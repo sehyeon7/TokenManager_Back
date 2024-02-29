@@ -11,3 +11,4 @@ class Tokens(models.Model):
     request=models.ForeignKey(Request, null=True, on_delete=models.CASCADE)
     is_expired=models.BooleanField(default=False)
     expires_at=models.DateTimeField(default=timezone.now)
+    created_at=models.DateTimeField(default=timezone.now)
